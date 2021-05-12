@@ -123,7 +123,9 @@ function TransactionDialogUI(props: TransactionDialogUIProps) {
                     <>
                         <DoneIcon className={classes.icon} />
                         <Typography className={classes.primary} color="textPrimary">
-                            {t('plugin_wallet_transaction_confirmed')}
+                            {state.receipt.status
+                                ? t('plugin_wallet_transaction_confirmed')
+                                : state.reason ?? t('plugin_wallet_transaction_reverted')}
                         </Typography>
                         <Typography>
                             <Link
@@ -149,21 +151,6 @@ function TransactionDialogUI(props: TransactionDialogUIProps) {
                                 ? t('plugin_wallet_transaction_server_error')
                                 : state.error.message}
                         </Typography>
-                    </>
-                ) : null}
-                {state.type === TransactionStateType.ITO_UNLUCKY ? (
-                    <>
-                        <WarningIcon className={classes.icon} />
-                        <section>
-                            <Typography className={classes.unlucky}>{t('plugin_ito_swap_unlucky_fail')}</Typography>
-                            <Link
-                                className={classes.link}
-                                href={resolveTransactionLinkOnEtherscan(chainId, state.receipt.transactionHash)}
-                                target="_blank"
-                                rel="noopener noreferrer">
-                                {t('plugin_wallet_view_on_etherscan')}
-                            </Link>
-                        </section>
                     </>
                 ) : null}
             </DialogContent>
