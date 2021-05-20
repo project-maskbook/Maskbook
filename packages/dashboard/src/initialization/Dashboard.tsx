@@ -23,6 +23,7 @@ import {
 } from '@dimensiondev/mask-plugin-infra'
 import { Pages } from '../pages/routes'
 import { useAppearance } from '../pages/Personas/api'
+import { CustomSnackbarProvider } from '../components/CustomSnackbarProvider'
 
 const PluginRender = createInjectHooksRenderer(useActivatedPluginsDashboard, (x) => x.GlobalInjection)
 
@@ -51,10 +52,12 @@ export default function DashboardRoot() {
                         <ThemeProvider theme={theme}>
                             <ErrorBoundary>
                                 <CssBaseline />
-                                <HashRouter>
-                                    <Pages />
-                                </HashRouter>
-                                <PluginRender />
+                                <CustomSnackbarProvider>
+                                    <HashRouter>
+                                        <Pages />
+                                    </HashRouter>
+                                    <PluginRender />
+                                </CustomSnackbarProvider>
                             </ErrorBoundary>
                         </ThemeProvider>
                     </StylesProvider>

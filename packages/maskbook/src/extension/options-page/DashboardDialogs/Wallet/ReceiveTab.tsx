@@ -1,7 +1,7 @@
 import { IconButton, InputAdornment, makeStyles, TextField, Theme } from '@material-ui/core'
 import FileCopyOutlinedIcon from '@material-ui/icons/FileCopyOutlined'
 import { useCopyToClipboard } from 'react-use'
-import { QRCode } from '../../../../components/shared/qrcode'
+import { QRCode } from '@dimensiondev/maskbook-theme'
 import type { WalletRecord } from '../../../../plugins/Wallet/database/types'
 import { useI18N } from '../../../../utils/i18n-next-ui'
 import { useSnackbarCallback } from '../Base'

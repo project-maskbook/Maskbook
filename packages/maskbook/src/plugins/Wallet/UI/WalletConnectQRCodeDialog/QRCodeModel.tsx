@@ -1,5 +1,5 @@
 import { Grid, makeStyles, Typography } from '@material-ui/core'
-import { QRCode } from '../../../../components/shared/qrcode'
+import { QRCode } from '@dimensiondev/maskbook-theme'
 import { useI18N } from '../../../../utils/i18n-next-ui'
 
 const useStyles = makeStyles((theme) => ({

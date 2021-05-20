@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { User } from 'react-feather'
-import { QRCode } from '../../../../components/shared/qrcode'
+import { QRCode } from '@dimensiondev/maskbook-theme'
 import { useI18N } from '../../../../utils/i18n-next-ui'
 import { compressBackupFile } from '../../../../utils/type-transform/BackupFileShortRepresentation'
 import { encodeArrayBuffer, encodeText } from '../../../../utils/type-transform/String-ArrayBuffer'

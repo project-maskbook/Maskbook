@@ -37,7 +37,10 @@ export const LightColor = {
     infoBackground: 'rgba(175, 195, 225, 0.15)',
     warning: '#FFB915',
     blue: 'rgb(28, 104, 243)',
-    linkText: '#1C68F3',
+    textLink: '#1C68F3',
+    lineLighter: '#E9E9EA',
+    textLight: '#A6A9B6',
+    lightestBackground: '#FFFFFF',
 }
 export const DarkColor: typeof LightColor = {
     primary: '#1c68f3',
@@ -77,7 +80,10 @@ export const DarkColor: typeof LightColor = {
     infoBackground: 'rgba(175, 195, 225, 0.15)',
     warning: '#FFB915',
     blue: 'rgb(28, 104, 243)',
-    linkText: '#ffffff',
+    textLink: '#ffffff',
+    lineLighter: '#32365B',
+    textLight: '#A6A9B6',
+    lightestBackground: '#212422',
 }
 
 export type Color = typeof LightColor
