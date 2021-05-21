@@ -1,9 +1,17 @@
 import { createContext, useContext } from 'react'
-import type { ChainId } from './types'
-
+import type { ChainId, PortfolioProvider, Transaction } from './types'
+import type { Subscription } from 'use-subscription'
 export interface Web3Context {
-    currentChain(): ChainId
-    onChainUpdate(callback: () => void): () => void
+    currentChain: Subscription<ChainId>
+    currentPortfolioDataProvider: Subscription<PortfolioProvider>
+    getTransactionList(
+        address: string,
+        provider: PortfolioProvider,
+        page?: number | undefined,
+    ): Promise<{
+        transactions: Transaction[]
+        hasNextPage: boolean
+    }>
 }
 
 const Web3Context = createContext<Web3Context>(null!)

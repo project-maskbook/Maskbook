@@ -42,11 +42,8 @@ export enum ZerionTransactionStatus {
     PENDING = 'pending',
 }
 
-export enum ZerionTransactionDirection {
-    IN = 'in',
-    OUT = 'out',
-    SELF = 'self',
-}
+export { ZerionTransactionDirection } from '@dimensiondev/web3-shared'
+import type { ZerionTransactionDirection } from '@dimensiondev/web3-shared'
 
 export interface ZerionPrice {
     value: number

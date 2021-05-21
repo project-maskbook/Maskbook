@@ -1,10 +1,10 @@
 {
   "name": "@dimensiondev/web3-shared",
   "dependencies": {
-    "use-subscription": "^1.5.1",
-    "@types/use-subscription": "^1.0.0"
+    "@types/use-subscription": "^1.0.0",
+    "react-use": "^17.2.4",
+    "use-subscription": "^1.5.1"
   },
-
   "typings": "./dist/index.d.ts",
   "main": "./dist/index.js"
 }

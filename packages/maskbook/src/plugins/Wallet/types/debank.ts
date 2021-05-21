@@ -1,7 +1,4 @@
-export enum DebankTransactionDirection {
-    SEND = 'send',
-    RECEIVE = 'receive',
-}
+export { DebankTransactionDirection } from '@dimensiondev/web3-shared'
 
 export interface DictItem {
     id: string
