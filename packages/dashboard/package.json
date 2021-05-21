@@ -15,6 +15,7 @@
     "@dimensiondev/icons": "workspace:*",
     "@dimensiondev/mask-plugin-infra": "workspace:*",
     "@dimensiondev/maskbook-shared": "workspace:*",
+    "@dimensiondev/web3-shared": "workspace:*",
     "@dimensiondev/maskbook-storybook-shared": "workspace:*",
     "@dimensiondev/maskbook-theme": "workspace:*",
     "@dimensiondev/plugin-example": "workspace:*",
