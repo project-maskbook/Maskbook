@@ -561,6 +561,7 @@ importers:
   packages/shared:
     specifiers:
       '@dimensiondev/holoflows-kit': 0.8.0-20210317064617-6c4792c
+      '@dimensiondev/web3-shared': workspace:*
       '@servie/events': ^3.0.0
       anchorme: ^2.1.2
       async-call-rpc: ^5.0.0
@@ -574,6 +575,7 @@ importers:
       wallet.ts: ^1.0.1
     dependencies:
       '@dimensiondev/holoflows-kit': 0.8.0-20210317064617-6c4792c
+      '@dimensiondev/web3-shared': link:../web3-shared
       '@servie/events': 3.0.0
       anchorme: 2.1.2
       async-call-rpc: 5.0.0
@@ -636,7 +638,12 @@ importers:
       storybook-addon-matrix: 1.6.0
 
   packages/web3-shared:
-    specifiers: {}
+    specifiers:
+      '@types/use-subscription': ^1.0.0
+      use-subscription: ^1.5.1
+    dependencies:
+      '@types/use-subscription': 1.0.0
+      use-subscription: 1.5.1
 
 packages:
 

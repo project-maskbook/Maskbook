@@ -5,6 +5,11 @@
     "outDir": "./dist/",
     "experimentalDecorators": true
   },
+  "references": [
+    {
+      "path": "../web3-shared"
+    }
+  ],
   "include": ["./src/"],
   "ts-node": {
     "compilerOptions": { "module": "CommonJS" }
