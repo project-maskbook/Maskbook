@@ -1,8 +1,9 @@
-export enum WalletNetworkType {
+export enum NetworkType {
     Ethereum = 'Ethereum',
     Binance = 'Binance',
     Polygon = 'Polygon',
 }
+
 export enum ProviderType {
     Maskbook = 'Maskbook',
     MetaMask = 'MetaMask',

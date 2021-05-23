@@ -12,11 +12,10 @@ import Services from '../../../extension/service'
 import { DashboardRoute } from '../../../extension/options-page/Route'
 import { delay } from '../../../utils/utils'
 import { isEnvironment, Environment } from '@dimensiondev/holoflows-kit'
-import { currentSelectedWalletProviderSettings } from '../settings'
+import { currentSelectedWalletAddressSettings, currentSelectedWalletProviderSettings } from '../settings'
 import { InjectedDialog } from '../../../components/shared/InjectedDialog'
 import { ProviderType } from '../../../web3/types'
 import { useValueRef } from '../../../utils/hooks/useValueRef'
-import { selectMaskbookWallet } from '../helpers'
 
 const useStyles = makeStyles((theme) => ({
     content: {
@@ -42,7 +41,8 @@ function SelectWalletDialogUI(props: SelectWalletDialogUIProps) {
     const onSelect = useCallback(
         (wallet: WalletRecord) => {
             closeDialog()
-            selectMaskbookWallet(wallet)
+            currentSelectedWalletAddressSettings.value = wallet.address
+            currentSelectedWalletProviderSettings.value = ProviderType.Maskbook
         },
         [closeDialog],
     )
