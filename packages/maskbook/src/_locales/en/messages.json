@@ -611,7 +611,6 @@
     "plugin_dhedge_pool_not_found": "Invalid pool address!",
     "plugin_dhedge_smt_wrong": "Something went wrong!",
     "wallet_status_title": "Account",
-    "wallet_status_connect_with": "Connected with {{provider}}",
     "wallet_status_button_change": "Change",
     "wallet_status_button_disconnect": "Disconnect",
     "wallet_status_button_copy_address": "Copy Address",
