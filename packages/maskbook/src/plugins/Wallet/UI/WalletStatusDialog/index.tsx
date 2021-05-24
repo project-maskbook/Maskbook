@@ -88,6 +88,8 @@ const useStyles = makeStyles((theme) => ({
     link: {
         color: theme.palette.text.secondary,
         fontSize: 14,
+        display: 'flex',
+        alignItems: 'center',
     },
     linkIcon: {
         marginRight: theme.spacing(1),
@@ -196,6 +198,7 @@ export function WalletStatusDialog(props: WalletStatusDialogProps) {
                         <div className={classes.infoRow}>
                             <Typography className={classes.accountName}>{selectedWallet.name}</Typography>
                             <Link
+                                className={classes.link}
                                 component="button"
                                 onClick={() => {
                                     setRenameDialog({
