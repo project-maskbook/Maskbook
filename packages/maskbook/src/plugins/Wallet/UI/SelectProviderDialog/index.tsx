@@ -37,7 +37,7 @@ import { useWallets } from '../../hooks/useWallet'
 import { resolveNetworkChainId } from '../../../../web3/pipes'
 import CHAINS from '../../../../web3/assets/chains.json'
 import { useAccount } from '../../../../web3/hooks/useAccount'
-import { useSnackbarCallback } from '../../../../extension/options-page/DashboardDialogs/Base'
+import { useChainId } from '../../../../web3/hooks/useChainId'
 
 const useStyles = makeStyles((theme: Theme) => ({
     paper: {
@@ -114,15 +114,28 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
     const classes = useStylesExtends(useStyles(), props)
 
     const account = useAccount()
+    const chainId = useChainId()
     const history = useHistory()
 
     //#region remote controlled dialog logic
     const { open, closeDialog } = useRemoteControlledDialog(WalletMessages.events.selectProviderDialogUpdated)
     //#endregion
 
+    //#region wallet status dialog
+    const { openDialog: openWalletStatusDialog } = useRemoteControlledDialog(
+        WalletMessages.events.walletStatusDialogUpdated,
+    )
+    //#endregion
+
     //#region select wallet dialog
     const { openDialog: openSelectWalletDialog } = useRemoteControlledDialog(
         WalletMessages.events.selectWalletDialogUpdated,
+    )
+    //#endregion
+
+    //#region connect wallet dialog
+    const { setDialog: setConnectWalletDialog } = useRemoteControlledDialog(
+        WalletMessages.events.connectWalletDialogUpdated,
     )
     //#endregion
 
@@ -150,6 +163,7 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
     const onConnectProvider = useCallback(
         async (providerType: ProviderType) => {
             closeDialog()
+
             switch (providerType) {
                 case ProviderType.Maskbook:
                     if (wallets.length > 0) {
@@ -161,13 +175,28 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                     else await Services.Welcome.openOptionsPage(DashboardRoute.Wallets, `create=${Date.now()}`)
                     break
                 case ProviderType.MetaMask:
-                    await Services.Ethereum.connectMetaMask()
+                    if (
+                        account &&
+                        selectedProviderType === providerType &&
+                        resolveNetworkChainId(selectedNetworkType) === chainId
+                    ) {
+                        openWalletStatusDialog()
+                    } else {
+                        setConnectWalletDialog({
+                            open: true,
+                            providerType,
+                        })
+                    }
                     break
                 case ProviderType.WalletConnect:
-                    setWalletConnectDialog({
+                    setConnectWalletDialog({
                         open: true,
-                        uri: await Services.Ethereum.createConnectionURI(),
+                        providerType,
                     })
+                    // setWalletConnectDialog({
+                    //     open: true,
+                    //     uri: await Services.Ethereum.createConnectionURI(),
+                    // })
                     break
                 case ProviderType.CustomNetwork:
                     break
@@ -175,7 +204,18 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                     unreachable(providerType)
             }
         },
-        [wallets, history, closeDialog, openSelectWalletDialog, setWalletConnectDialog],
+        [
+            account,
+            chainId,
+            wallets,
+            history,
+            closeDialog,
+            selectedNetworkType,
+            selectedProviderType,
+            openWalletStatusDialog,
+            openSelectWalletDialog,
+            setWalletConnectDialog,
+        ],
     )
 
     return (
@@ -209,7 +249,7 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                         className={classnames(classes.stepContent, classes.grid)}
                         gap={16}
                         cols={3}
-                        rowHeight={183}>
+                        rowHeight={151}>
                         <ImageListItem>
                             <Provider
                                 logo={<MaskbookIcon className={classes.icon} viewBox="0 0 45 45" />}

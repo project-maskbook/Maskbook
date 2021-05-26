@@ -1,5 +1,5 @@
 import type { FixedTokenListProps } from '../../extension/options-page/DashboardComponents/FixedTokenList'
-import type { NativeTokenDetailed, ERC20TokenDetailed } from '../../web3/types'
+import type { NativeTokenDetailed, ERC20TokenDetailed, ProviderType } from '../../web3/types'
 import { createPluginMessage } from '../utils/createPluginMessage'
 import { createPluginRPC } from '../utils/createPluginRPC'
 import { PLUGIN_IDENTIFIER } from './constants'
@@ -12,6 +12,15 @@ export type SelectProviderDialogEvent =
     | {
           open: false
           address?: string
+      }
+
+export type ConnectWalletDialogEvent =
+    | {
+          open: true
+          providerType: ProviderType
+      }
+    | {
+          open: false
       }
 
 export type SelectWalletDialogEvent = {
@@ -93,6 +102,11 @@ interface WalletMessage {
      * Select provider dialog
      */
     selectProviderDialogUpdated: SelectProviderDialogEvent
+
+    /**
+     * Connect wallet dialog
+     */
+    connectWalletDialogUpdated: ConnectWalletDialogEvent
 
     /**
      * Wallet status dialog
