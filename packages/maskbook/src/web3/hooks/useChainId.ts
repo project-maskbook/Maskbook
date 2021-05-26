@@ -1,4 +1,4 @@
-import { useValueRef } from '../../utils/hooks/useValueRef'
+import { useValueRefDelayed } from '../../utils/hooks/useValueRef'
 import { ChainId, ProviderType } from '../types'
 import { useWallet } from '../../plugins/Wallet/hooks/useWallet'
 import { Flags } from '../../utils/flags'
@@ -8,22 +8,25 @@ import {
     currentSelectedWalletProviderSettings,
     currentWalletConnectChainIdSettings,
 } from '../../plugins/Wallet/settings'
+import { resolveChainDetailed } from '../pipes'
+import { unreachable } from '../../utils'
 
 /**
  * Get the chain id which is using by the given (or default) wallet
  */
 export function useUnsafeChainId() {
-    const provider = useValueRef(currentSelectedWalletProviderSettings)
-    const MaskbookChainId = useValueRef(currentMaskbookChainIdSettings)
-    const MetaMaskChainId = useValueRef(currentMetaMaskChainIdSettings)
-    const WalletConnectChainId = useValueRef(currentWalletConnectChainIdSettings)
+    const provider = useValueRefDelayed(currentSelectedWalletProviderSettings)
+    const MaskbookChainId = useValueRefDelayed(currentMaskbookChainIdSettings)
+    const MetaMaskChainId = useValueRefDelayed(currentMetaMaskChainIdSettings)
+    const WalletConnectChainId = useValueRefDelayed(currentWalletConnectChainIdSettings)
 
     const wallet = useWallet()
     if (!wallet) return MaskbookChainId
     if (provider === ProviderType.Maskbook) return MaskbookChainId
     if (provider === ProviderType.MetaMask) return MetaMaskChainId
     if (provider === ProviderType.WalletConnect) return WalletConnectChainId
-    return MaskbookChainId
+    if (provider === ProviderType.CustomNetwork) return MaskbookChainId
+    unreachable(provider)
 }
 
 /**
@@ -32,16 +35,22 @@ export function useUnsafeChainId() {
  */
 export function useChainId() {
     const unsafeChainId = useUnsafeChainId()
-    return unsafeChainId !== ChainId.Mainnet && Flags.wallet_network_strict_mode_enabled
-        ? ChainId.Mainnet
-        : unsafeChainId
+
+    if (!Flags.wallet_network_strict_mode_enabled) return unsafeChainId
+    const chainDetailed = resolveChainDetailed(unsafeChainId)
+    if (chainDetailed.chain === 'ETH') return ChainId.Mainnet
+    if (chainDetailed.chain === 'BSC') return ChainId.BSC
+    if (chainDetailed.chain === 'Matic') return ChainId.Matic
+    return ChainId.Mainnet
 }
 
 /**
  * Retruns true if chain id is available
  */
 export function useChainIdValid() {
+    const wallet = useWallet()
     const unsafeChainId = useUnsafeChainId()
-    const selectedWallet = useWallet()
-    return !Flags.wallet_network_strict_mode_enabled || unsafeChainId === ChainId.Mainnet || !selectedWallet
+
+    if (!wallet || !Flags.wallet_network_strict_mode_enabled) return true
+    return resolveChainDetailed(unsafeChainId).network === 'mainnet'
 }

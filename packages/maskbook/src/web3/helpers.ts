@@ -10,6 +10,7 @@ import {
     ERC721TokenAssetDetailed,
     ERC1155TokenAssetDetailed,
 } from './types'
+import { resolveChainDetailed } from './pipes'
 
 export function isSameAddress(addrA: string, addrB: string) {
     return addrA.toLowerCase() === addrB.toLowerCase()
@@ -57,14 +58,13 @@ export function getAllConstants<T extends Web3Constants, K extends keyof T>(cons
 }
 //#endregion
 
-export function createEtherToken(chainId: ChainId): NativeTokenDetailed {
+export function createNativeToken(chainId: ChainId): NativeTokenDetailed {
+    const chainDetailed = resolveChainDetailed(chainId)
     return {
         type: EthereumTokenType.Native,
         chainId,
         address: getConstant(CONSTANTS, 'NATIVE_TOKEN_ADDRESS'),
-        decimals: 18,
-        name: 'Ether',
-        symbol: 'ETH',
+        ...chainDetailed.nativeCurrency,
     }
 }
 

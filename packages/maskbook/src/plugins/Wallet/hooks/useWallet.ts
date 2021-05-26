@@ -2,7 +2,7 @@ import { first } from 'lodash-es'
 import { ValueRef } from '@dimensiondev/holoflows-kit'
 import { WalletMessages, WalletRPC } from '../messages'
 import { ProviderType } from '../../../web3/types'
-import { useValueRef } from '../../../utils/hooks/useValueRef'
+import { useValueRefDelayed } from '../../../utils/hooks/useValueRef'
 import type { WalletRecord } from '../database/types'
 import { WalletArrayComparer } from '../helpers'
 import { isSameAddress } from '../../../web3/helpers'
@@ -18,14 +18,14 @@ revalidate()
 //#endregion
 
 export function useWallet(address?: string) {
-    const address_ = useValueRef(currentSelectedWalletAddressSettings)
+    const address_ = useValueRefDelayed(currentSelectedWalletAddressSettings)
     const wallets = useWallets()
     return wallets.find((x) => isSameAddress(x.address, address ?? address_))
 }
 
 export function useWallets(provider?: ProviderType) {
-    const wallets = useValueRef(walletsRef)
-    const selectedWalletProvider = useValueRef(currentSelectedWalletProviderSettings)
+    const wallets = useValueRefDelayed(walletsRef)
+    const selectedWalletProvider = useValueRefDelayed(currentSelectedWalletProviderSettings)
     if (provider === ProviderType.Maskbook) return wallets.filter((x) => x._private_key_ || x.mnemonic.length)
     if (provider === selectedWalletProvider)
         return wallets.filter((x) => isSameAddress(x.address, selectedWalletProvider))

@@ -28,7 +28,7 @@ import Services from '../../../../extension/service'
 import { UST } from '../../constants'
 import { SelectTokenDialogEvent, WalletMessages } from '../../../Wallet/messages'
 import { useChainId } from '../../../../web3/hooks/useChainId'
-import { createERC20Token, createEtherToken } from '../../../../web3/helpers'
+import { createERC20Token, createNativeToken } from '../../../../web3/helpers'
 import { PluginTraderRPC } from '../../messages'
 import { isTwitter } from '../../../../social-network-adaptor/twitter.com/base'
 import { isEtherWrapper } from '../../helpers'
@@ -77,7 +77,7 @@ export function Trader(props: TraderProps) {
     useEffect(() => {
         dispatchTradeStore({
             type: TradeActionType.UPDATE_INPUT_TOKEN,
-            token: chainId === ChainId.Mainnet && coin?.is_mirrored ? UST : createEtherToken(chainId),
+            token: chainId === ChainId.Mainnet && coin?.is_mirrored ? UST : createNativeToken(chainId),
         })
         dispatchTradeStore({
             type: TradeActionType.UPDATE_OUTPUT_TOKEN,

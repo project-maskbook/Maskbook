@@ -283,7 +283,7 @@ export function ToolboxHint(props: ToolboxHintProps) {
                             />
                             <NetworkIcon
                                 size={14}
-                                classes={{ networkIcon: classes.networkIcon }}
+                                classes={{ icon: classes.networkIcon }}
                                 networkType={selectedNetwork}
                             />
                         </div>

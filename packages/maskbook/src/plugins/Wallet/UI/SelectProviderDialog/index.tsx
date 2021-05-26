@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: 'auto',
         padding: 0,
     },
-    networkIconContainer: {
+    iconWrapper: {
         position: 'relative',
         cursor: 'pointer',
         height: 48,
@@ -87,7 +87,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: 14,
         background: '#fff',
         borderRadius: '50%',
-        boxShadow: `0 0 0 1.5px #fff`,
     },
     grid: {
         width: '100%',
@@ -175,6 +174,7 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                     else await Services.Welcome.openOptionsPage(DashboardRoute.Wallets, `create=${Date.now()}`)
                     break
                 case ProviderType.MetaMask:
+                case ProviderType.WalletConnect:
                     if (
                         account &&
                         selectedProviderType === providerType &&
@@ -188,18 +188,8 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                         })
                     }
                     break
-                case ProviderType.WalletConnect:
-                    setConnectWalletDialog({
-                        open: true,
-                        providerType,
-                    })
-                    // setWalletConnectDialog({
-                    //     open: true,
-                    //     uri: await Services.Ethereum.createConnectionURI(),
-                    // })
-                    break
                 case ProviderType.CustomNetwork:
-                    break
+                    throw new Error('To be implemented.')
                 default:
                     unreachable(providerType)
             }
@@ -231,7 +221,7 @@ function SelectProviderDialogUI(props: SelectProviderDialogUIProps) {
                                 className={classes.network}
                                 key={network}
                                 onClick={() => onSelectNetwork(network)}>
-                                <div className={classes.networkIconContainer}>
+                                <div className={classes.iconWrapper}>
                                     <NetworkIcon networkType={network} />
                                     {selectedNetworkType === network && (
                                         <SuccessIcon className={classes.checkedBadge} />
