@@ -4,7 +4,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ErrorIcon from '@material-ui/icons/Error'
 import { noop } from 'lodash-es'
 import { TokenIcon } from '../../extension/options-page/DashboardComponents/TokenIcon'
-import type { NativeTokenDetailed, ERC20TokenDetailed } from '../types'
+import type { FungibleTokenDetailed } from '../types'
 
 const useStyles = makeStyles((theme: Theme) => {
     return {
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => {
 })
 
 export interface SelectTokenChipProps {
-    token?: NativeTokenDetailed | ERC20TokenDetailed | null
+    token?: FungibleTokenDetailed | null
     error?: Error
     loading?: boolean
     readonly?: boolean

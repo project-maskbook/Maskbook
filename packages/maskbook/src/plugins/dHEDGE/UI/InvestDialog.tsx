@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 import { v4 as uuid } from 'uuid'
 
 import { useI18N } from '../../../utils/i18n-next-ui'
-import { EthereumTokenType, NativeTokenDetailed, ERC20TokenDetailed } from '../../../web3/types'
+import { EthereumTokenType, FungibleTokenDetailed } from '../../../web3/types'
 import { useAccount } from '../../../web3/hooks/useAccount'
 import ActionButton from '../../../extension/options-page/DashboardComponents/ActionButton'
 import { useInvestCallback } from '../hooks/useInvestCallback'
@@ -55,7 +55,7 @@ export function InvestDialog() {
 
     const [id] = useState(uuid())
     const [pool, setPool] = useState<Pool>()
-    const [token, setToken] = useState<NativeTokenDetailed | ERC20TokenDetailed>()
+    const [token, setToken] = useState<FungibleTokenDetailed>()
 
     // context
     const account = useAccount()

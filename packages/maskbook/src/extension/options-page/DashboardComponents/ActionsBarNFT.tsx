@@ -6,7 +6,7 @@ import { useStylesExtends } from '../../../components/custom-ui-helper'
 import { useModal } from '../DashboardDialogs/Base'
 import { DashboardWalletHideTokenConfirmDialog, DashboardWalletTransferDialogNFT } from '../DashboardDialogs/Wallet'
 import type { WalletRecord } from '../../../plugins/Wallet/database/types'
-import { ERC1155TokenDetailed, ERC721TokenDetailed, EthereumTokenType } from '../../../web3/types'
+import { NonFungibleTokenDetailed, EthereumTokenType } from '../../../web3/types'
 import { useChainIdValid } from '../../../web3/hooks/useChainId'
 
 const useStyles = makeStyles((theme) => ({
@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export interface ActionsBarNFT_Props extends withClasses<'more'> {
     wallet: WalletRecord
-    token: ERC721TokenDetailed | ERC1155TokenDetailed
+    token: NonFungibleTokenDetailed
 }
 
 export function ActionsBarNFT(props: ActionsBarNFT_Props) {
