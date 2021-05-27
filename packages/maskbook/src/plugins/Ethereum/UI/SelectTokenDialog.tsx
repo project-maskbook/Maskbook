@@ -43,14 +43,14 @@ export function SelectTokenDialog(props: SelectTokenDialogProps) {
     //#endregion
 
     //#region remote controlled dialog
-    const [disableNativeToken, setDisableNative] = useState(true)
+    const [disableNativeToken, setDisableNativeToken] = useState(true)
     const [disableSearchBar, setDisableSearchBar] = useState(false)
     const [FixedTokenListProps, setFixedTokenListProps] = useState<FixedTokenListProps | null>(null)
 
     const { open, setDialog } = useRemoteControlledDialog(WalletMessages.events.selectTokenDialogUpdated, (ev) => {
         if (!ev.open) return
         setId(ev.uuid)
-        setDisableNative(ev.disableNativeToken ?? true)
+        setDisableNativeToken(ev.disableNativeToken ?? true)
         setDisableSearchBar(ev.disableSearchBar ?? false)
         setFixedTokenListProps(ev.FixedTokenListProps ?? null)
     })
