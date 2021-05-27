@@ -13,20 +13,12 @@ import {
     DashboardWalletBackupDialog,
     DashboardWalletDeleteConfirmDialog,
 } from '../DashboardDialogs/Wallet'
-import {
-    Flags,
-    useMenu,
-    useI18N,
-    useColorStyles,
-    useMatchXS,
-    useRemoteControlledDialog,
-    useValueRef,
-} from '../../../utils'
+import { Flags, useMenu, useI18N, useColorStyles, useMatchXS, useRemoteControlledDialog } from '../../../utils'
 import type { WalletRecord } from '../../../plugins/Wallet/database/types'
 import { WalletAssetsTable } from './WalletAssetsTable'
 import { PluginTransakMessages } from '../../../plugins/Transak/messages'
 import { WalletMessages } from '../../../plugins/Wallet/messages'
-import { useChainId, useChainIdValid } from '../../../web3/hooks/useChainId'
+import { useChainIdValid } from '../../../web3/hooks/useChainId'
 import { TransactionList } from './TransactionList'
 import { CollectibleList } from './CollectibleList'
 import { useHistory, useLocation } from 'react-router'
