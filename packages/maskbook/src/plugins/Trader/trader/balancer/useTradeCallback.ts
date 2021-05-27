@@ -79,7 +79,7 @@ export function useTradeCallback(
                       tradeAmount.toFixed(),
                   )
 
-        // trade with ether
+        // trade with native token
         let transactionValue = '0'
         if (trade.strategy === TradeStrategy.ExactIn && trade.inputToken.type === EthereumTokenType.Native)
             transactionValue = trade.inputAmount.toFixed()

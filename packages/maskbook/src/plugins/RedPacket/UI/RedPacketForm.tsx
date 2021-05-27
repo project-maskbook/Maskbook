@@ -89,7 +89,7 @@ export function RedPacketForm(props: RedPacketFormProps) {
         setSelectTokenDialog({
             open: true,
             uuid: id,
-            disableEther: false,
+            disableNativeToken: false,
             FixedTokenListProps: {
                 selectedTokens: token ? [token.address] : [],
             },

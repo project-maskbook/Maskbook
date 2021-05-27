@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js'
 import type { NativeTokenDetailed, ERC20TokenDetailed } from '../../../web3/types'
 import { TradeProvider, TradeStrategy } from '../types'
-import { useTrade as useEtherTrade } from './ether/useTrade'
-import { useTradeComputed as useEtherTradeComputed } from './ether/useTradeComputed'
+import { useTrade as useNativeTokenTrade } from './native/useTrade'
+import { useTradeComputed as useNativeTokenTradeComputed } from './native/useTradeComputed'
 import { useV2Trade as useUniswapTrade } from './uniswap/useV2Trade'
 import { useV2TradeComputed as useUniswapTradeComputed } from './uniswap/useV2TradeComputed'
 import { useTradeComputed as useZrxTradeComputed } from './0x/useTradeComputed'
@@ -25,9 +25,9 @@ export function useTradeComputed(
     const outputAmount_ = new BigNumber(outputAmount || '0').multipliedBy(outputTokenProduct).integerValue().toFixed()
 
     // ETH-WETH pair
-    const ether_ = useEtherTrade(inputToken, outputToken)
-    const ether = useEtherTradeComputed(
-        ether_.value ?? false,
+    const nativeTokenTrade_ = useNativeTokenTrade(inputToken, outputToken)
+    const nativeTokenTrade = useNativeTokenTradeComputed(
+        nativeTokenTrade_.value ?? false,
         strategy,
         inputAmount_,
         outputAmount_,
@@ -76,10 +76,10 @@ export function useTradeComputed(
         outputToken,
     )
 
-    if (ether_.value)
+    if (nativeTokenTrade_.value)
         return {
-            ...ether_,
-            value: ether,
+            ...nativeTokenTrade_,
+            value: nativeTokenTrade,
         }
 
     switch (provider) {
