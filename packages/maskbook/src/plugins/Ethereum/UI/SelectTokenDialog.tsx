@@ -38,7 +38,7 @@ export function SelectTokenDialog(props: SelectTokenDialogProps) {
     const [keyword, setKeyword] = useState('')
     const chainDetailed = useChainDetailed()
 
-    //#region native token
+    //#region the native token
     const { value: nativeTokenDetailed } = useNativeTokenDetailed()
     //#endregion
 
