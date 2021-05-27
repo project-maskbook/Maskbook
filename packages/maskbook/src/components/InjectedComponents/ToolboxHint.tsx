@@ -21,6 +21,7 @@ import { useStylesExtends } from '../custom-ui-helper'
 import classNames from 'classnames'
 import { useWallet } from '../../plugins/Wallet/hooks/useWallet'
 import { ClaimAllDialog } from '../../plugins/ITO/UI/ClaimAllDialog'
+import { ChainState } from '../../web3/state/useChainState'
 import { ProviderIcon } from '../shared/ProviderIcon'
 import { NetworkIcon } from '../shared/NetworkIcon'
 import { useValueRef } from '../../utils/hooks/useValueRef'
@@ -305,7 +306,9 @@ export function ToolboxHint(props: ToolboxHintProps) {
                 </div>
             </div>
             {isClaimAllDialogOpen ? (
-                <ClaimAllDialog open={isClaimAllDialogOpen} onClose={onClaimAllDialogClose} />
+                <ChainState.Provider>
+                    <ClaimAllDialog open={isClaimAllDialogOpen} onClose={onClaimAllDialogClose} />
+                </ChainState.Provider>
             ) : null}
         </>
     )
