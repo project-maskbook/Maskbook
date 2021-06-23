@@ -1,8 +1,6 @@
-import { ProfileIdentifier, Identifier, PersonaIdentifier, ECKeyIdentifierFromJsonWebKey } from '../../database/type'
 import { compressSecp256k1Key, decompressSecp256k1Key } from './SECP256k1-Compression'
 import type { BackupJSONFileLatest } from './BackupFormat/JSON/latest'
-import type { ProfileRecord } from '../../database/Persona/Persona.db'
-import type { AESJsonWebKey } from '../../modules/CryptoAlgorithm/interfaces/utils'
+import { AESJsonWebKey, Identifier, PersonaIdentifier, ProfileIdentifier } from '../..'
 
 export type BackupJSONFileLatestShort = [
     string, // version, should be "1"

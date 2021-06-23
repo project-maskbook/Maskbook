@@ -1,4 +1,4 @@
-import type { PersonaIdentifier, ProfileIdentifier } from '..'
+import type { AESJsonWebKey, PersonaIdentifier, ProfileIdentifier } from '..'
 
 /**
  * This interface contains the minimal information for UI display
@@ -13,4 +13,13 @@ export interface ProfileInformation {
     /** The nickname of the profile. Should be used in prior. */
     nickname?: string
     identifier: ProfileIdentifier
+}
+
+export interface ProfileRecord {
+    identifier: ProfileIdentifier
+    nickname?: string
+    localKey?: AESJsonWebKey
+    linkedPersona?: PersonaIdentifier
+    createdAt: Date
+    updatedAt: Date
 }

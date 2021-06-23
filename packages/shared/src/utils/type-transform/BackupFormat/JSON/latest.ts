@@ -4,7 +4,7 @@ import {
     patchNonBreakingUpgradeForBackupJSONFileVersion1,
     upgradeFromBackupJSONFileVersion0,
 } from './version-1'
-import type { ProfileIdentifier } from '../../../../database/type'
+
 import { isBackupJSONFileVersion0 } from './version-0'
 import {
     BackupJSONFileVersion2,
@@ -12,6 +12,7 @@ import {
     upgradeFromBackupJSONFileVersion1,
     patchNonBreakingUpgradeForBackupJSONFileVersion2,
 } from './version-2'
+import type { ProfileIdentifier } from '../../../..'
 
 /**
  * Always use this interface in other code.

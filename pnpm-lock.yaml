@@ -581,6 +581,7 @@ importers:
       bignumber.js: ^9.0.1
       immer: ^9.0.2
       lodash-es: ^4.17.21
+      pvtsutils: ^1.1.7
       ts-results: ^3.3.0
       typeson: ^6.1.0
       typeson-registry: ^1.0.0-alpha.38
@@ -595,6 +596,7 @@ importers:
       bignumber.js: 9.0.1
       immer: 9.0.2
       lodash-es: 4.17.21
+      pvtsutils: 1.1.7
       ts-results: 3.3.0
       typeson: 6.1.0
       typeson-registry: 1.0.0-alpha.39
@@ -18903,6 +18905,12 @@ packages:
       tslib: 2.1.0
     dev: false
 
+  /pvtsutils/1.1.7:
+    resolution: {integrity: sha512-faOiD/XpB/cIebRzYwzYjCmYgiDd53YEBni+Mt1+8/HlrARHYBpsU2OHOt3EZ1ZhfRNxPL0dH3K/vKaMgNWVGA==}
+    dependencies:
+      tslib: 2.3.0
+    dev: false
+
   /pvutils/1.0.17:
     resolution: {integrity: sha512-wLHYUQxWaXVQvKnwIDWFVKDJku9XDCvyhhxoq8dc5MFdIlRenyPI9eSfEtcvgHgD7FlvCyGAlWgOzRnZD99GZQ==}
     engines: {node: '>=6.0.0'}
@@ -22027,6 +22035,10 @@ packages:
 
   /tslib/2.2.0:
     resolution: {integrity: sha512-gS9GVHRU+RGn5KQM2rllAlR3dU6m7AcpJKdtH8gFvQiC4Otgk98XnmMU+nZenHt/+VhnBPWwgrJsyrdcw6i23w==}
+
+  /tslib/2.3.0:
+    resolution: {integrity: sha512-N82ooyxVNm6h1riLCoyS9e3fuJ3AMG2zIZs2Gd1ATcSFjSA23Q0fzjjZeh0jbJvWVDZ0cJT8yaNNaaXHzueNjg==}
+    dev: false
 
   /tslint-eslint-rules/4.1.1_tslint@5.20.1+typescript@2.9.2:
     resolution: {integrity: sha1-fDDniC8mvCdr/5HSOEl1xp2viLo=}
