@@ -79,5 +79,13 @@
     "settings_email_hosting_service_title": "Email Hosting Service",
     "settings_email_hosting_service_desc": "Unauthorized",
     "settings_log_out_title": "Log Out",
-    "settings_log_out_desc": "Please make sure your data is backed up and log out"
+    "settings_log_out_desc": "Please make sure your data is backed up and log out",
+
+    "register_restore_backups": "Restore Backups",
+    "register_restore_backups_cancel": "Cancel",
+    "register_restore_backups_confirm": "Restore",
+    "register_restore_backups_hint": "Please click or drag the file here",
+    "register_restore_backups_file": "File",
+    "register_restore_backups_text": "Text",
+    "register_restore_backups_tabs": "Restore Backup Tabs"
 }

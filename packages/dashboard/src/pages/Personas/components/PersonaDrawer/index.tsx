@@ -6,6 +6,7 @@ import { MaskColorVar } from '@dimensiondev/maskbook-theme'
 import { AddPersonaCard } from '../AddPersonaCard'
 import { useDashboardI18N } from '../../../../locales'
 import type { PersonaIdentifier, PersonaInformation } from '@dimensiondev/maskbook-shared'
+import { RestoreBackupDialog } from '../../../Register/Components/Restore'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -70,11 +71,13 @@ export interface PersonaDrawerUIProps extends PersonaDrawer {
 export const PersonaDrawerUI = memo<PersonaDrawerUIProps>(
     ({ open, currentPersonaIdentifier, toggleDrawer, personas, onChangeCurrentPersona, onCreatePersona }) => {
         const classes = useStyles()
-
         const t = useDashboardI18N()
-
         const [showAddPersonaCard, setShowAddPersonaCard] = useState(false)
 
+        //#region
+        const [showRestoreBackup, setShowRestoreBackup] = useState(false)
+        console.log(showRestoreBackup)
+        //#endregion
         return (
             <Drawer
                 anchor="right"
@@ -107,7 +110,10 @@ export const PersonaDrawerUI = memo<PersonaDrawerUIProps>(
                 <Box className={classes.buttons}>
                     <Button onClick={() => setShowAddPersonaCard(true)}>{t.personas_add_persona()}</Button>
                     {/* TODO: replace className to color prop */}
-                    <Button className={classes.backup}>{t.personas_back_up()}</Button>
+                    <Button className={classes.backup} onClick={() => setShowRestoreBackup(true)}>
+                        {t.personas_back_up()}
+                    </Button>
+                    <RestoreBackupDialog open={true} />
                 </Box>
             </Drawer>
         )
