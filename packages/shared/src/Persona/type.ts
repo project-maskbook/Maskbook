@@ -23,3 +23,7 @@ export interface ProfileRecord {
     createdAt: Date
     updatedAt: Date
 }
+
+export interface LinkedProfileDetails {
+    connectionConfirmState: 'confirmed' | 'pending' | 'denied'
+}

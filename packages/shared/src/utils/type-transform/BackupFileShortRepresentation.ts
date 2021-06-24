@@ -1,6 +1,6 @@
 import { compressSecp256k1Key, decompressSecp256k1Key } from './SECP256k1-Compression'
 import type { BackupJSONFileLatest } from './BackupFormat/JSON/latest'
-import { AESJsonWebKey, Identifier, PersonaIdentifier, ProfileIdentifier } from '../..'
+import { AESJsonWebKey, Identifier, PersonaIdentifier, ProfileIdentifier, ProfileRecord } from '../..'
 
 export type BackupJSONFileLatestShort = [
     string, // version, should be "1"

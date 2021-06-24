@@ -1,13 +1,13 @@
 /* eslint-disable import/no-deprecated */
 import type { BackupJSONFileVersion1 } from './version-1'
 
-import { twitterBase } from '../../../../social-network-adaptor/twitter.com/base'
-import { facebookBase } from '../../../../social-network-adaptor/facebook.com/base'
 import {
     AESJsonWebKey,
+    ECKeyIdentifierFromJsonWebKey,
     EC_Private_JsonWebKey,
     EC_Public_JsonWebKey,
     GroupIdentifier,
+    LinkedProfileDetails,
     ProfileIdentifier,
 } from '../../../..'
 
