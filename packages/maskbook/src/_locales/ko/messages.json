@@ -324,7 +324,6 @@
     "plugin_wallet_transaction_rejected": "해당 거래는 이미 거부되었습니다.",
     "plugin_wallet_transaction_server_error": "JSON-RPC 오류 때문에 거래가 실패했습니다.",
     "plugin_wallet_view_on_explorer": "Explorer에서 보기",
-    "plugin_ito_placeholder_when_token_unselected": "",
     "plugin_wallet_wrong_network_tip": "정확한 이더리움 네트워크를 연결하세요.",
     "plugin_wallet_recent_transaction": "",
     "plugin_wallet_clear_all": "",
@@ -600,6 +599,7 @@
     "plugin_ito_unlocking_symbol": "{{symbol}} 언락 중",
     "plugin_ito_continue": "",
     "plugin_ito_view_on_explorer": "",
+    "plugin_ito_placeholder_when_token_unselected": "",
     "plugin_collectible_you": "You",
     "plugin_collectible_done": "닫기",
     "plugin_collectible_retry": "다시 시도하기",
@@ -723,5 +723,11 @@
     "plugin_dhedge_insufficient_balance": "{{symbol}} 잔액 부족",
     "plugin_dhedge_loading": "로딩 중",
     "plugin_dhedge_pool_not_found": "무효한 풀 주소!",
-    "plugin_dhedge_smt_wrong": "오류가 발생합니다."
+    "plugin_dhedge_smt_wrong": "오류가 발생합니다.",
+    "plugin_voicechat_title": "",
+    "plugin_voicechat_activate_switch": "",
+    "plugin_voicechat_save": "",
+    "plugin_voicechat_join_conversation": "",
+    "plugin_voicechat_you": "",
+    "plugin_voicechat_custom_server_url": ""
 }

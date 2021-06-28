@@ -324,7 +324,6 @@
     "plugin_wallet_transaction_rejected": "交易被拒絕！",
     "plugin_wallet_transaction_server_error": "交易由於內部 JSON-RPC 伺服器錯誤而失敗。",
     "plugin_wallet_view_on_explorer": "在區塊鏈瀏覽器上查看",
-    "plugin_ito_placeholder_when_token_unselected": "",
     "plugin_wallet_wrong_network_tip": "請連接到適當的乙太坊網絡。",
     "plugin_wallet_recent_transaction": "",
     "plugin_wallet_clear_all": "",
@@ -600,6 +599,7 @@
     "plugin_ito_unlocking_symbol": "解鎖中 {{symbol}}",
     "plugin_ito_continue": "繼續",
     "plugin_ito_view_on_explorer": "在區塊鏈瀏覽器上查看",
+    "plugin_ito_placeholder_when_token_unselected": "",
     "plugin_collectible_you": "你",
     "plugin_collectible_done": "完成",
     "plugin_collectible_retry": "重試",
@@ -723,5 +723,11 @@
     "plugin_dhedge_insufficient_balance": "{{symbol}} 餘額不足",
     "plugin_dhedge_loading": "讀取中…",
     "plugin_dhedge_pool_not_found": "錯誤的池地址！",
-    "plugin_dhedge_smt_wrong": "出錯了！"
+    "plugin_dhedge_smt_wrong": "出錯了！",
+    "plugin_voicechat_title": "",
+    "plugin_voicechat_activate_switch": "",
+    "plugin_voicechat_save": "",
+    "plugin_voicechat_join_conversation": "",
+    "plugin_voicechat_you": "",
+    "plugin_voicechat_custom_server_url": ""
 }

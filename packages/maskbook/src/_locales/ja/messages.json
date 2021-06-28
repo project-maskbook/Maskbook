@@ -324,7 +324,6 @@
     "plugin_wallet_transaction_rejected": "取引は拒否されました。",
     "plugin_wallet_transaction_server_error": "取引は内部の JSON-RPC サーバーのエラーにより失敗しました。",
     "plugin_wallet_view_on_explorer": "Explorer で見る",
-    "plugin_ito_placeholder_when_token_unselected": "",
     "plugin_wallet_wrong_network_tip": "正しい Ethereum ネットワークを選択してください。",
     "plugin_wallet_recent_transaction": "",
     "plugin_wallet_clear_all": "",
@@ -600,6 +599,7 @@
     "plugin_ito_unlocking_symbol": "{{symbol}} をアンロック中",
     "plugin_ito_continue": "再開",
     "plugin_ito_view_on_explorer": "Explorer で見る",
+    "plugin_ito_placeholder_when_token_unselected": "",
     "plugin_collectible_you": "あなた",
     "plugin_collectible_done": "完了",
     "plugin_collectible_retry": "リトライ",
@@ -723,5 +723,11 @@
     "plugin_dhedge_insufficient_balance": "{{symbol}} の残高が不十分です",
     "plugin_dhedge_loading": "ロード中…",
     "plugin_dhedge_pool_not_found": "無効なプールアドレスです！",
-    "plugin_dhedge_smt_wrong": "何か間違いが発生しました！"
+    "plugin_dhedge_smt_wrong": "何か間違いが発生しました！",
+    "plugin_voicechat_title": "",
+    "plugin_voicechat_activate_switch": "",
+    "plugin_voicechat_save": "",
+    "plugin_voicechat_join_conversation": "",
+    "plugin_voicechat_you": "",
+    "plugin_voicechat_custom_server_url": ""
 }
