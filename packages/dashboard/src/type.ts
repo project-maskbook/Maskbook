@@ -8,5 +8,11 @@ export enum RoutePaths {
     WalletsSell = '/wallets/sell',
     WalletsHistory = '/wallets/history',
     Settings = '/settings',
-    Plugins = '/plugins',
+    Labs = '/labs',
+}
+
+export enum MarketTrendProvider {
+    COIN_GECKO,
+    COIN_MARKET_CAP,
+    UNISWAP_INFO,
 }

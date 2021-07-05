@@ -1,6 +1,6 @@
+import type { WebExtensionMessage } from '@dimensiondev/holoflows-kit'
 import { createPluginMessage } from '../utils/createPluginMessage'
 import { PLUGIN_IDENTIFIER } from './constants'
-import type { WebExtensionMessage } from '@dimensiondev/holoflows-kit'
 
 type BuyTokenDialogEvent =
     | {
@@ -14,6 +14,7 @@ type BuyTokenDialogEvent =
 
 interface PluginTransakMessage {
     buyTokenDialogUpdated: BuyTokenDialogEvent
+    rpc: unknown
 }
 
 if (import.meta.webpackHot) import.meta.webpackHot.accept()
