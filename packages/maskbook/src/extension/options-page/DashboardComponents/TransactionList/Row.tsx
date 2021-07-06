@@ -5,11 +5,11 @@ import { Link, makeStyles, TableCell, TableRow, Typography } from '@material-ui/
 import { resolveLinkOnExplorer, ChainId } from '@masknet/web3-shared'
 import { Record } from './Record'
 import { useI18N } from '../../../../utils'
-import type { Transaction } from '../../../../plugins/Wallet/types'
+import type { WalletTransaction } from './index'
 
 interface Props {
     chainId: ChainId
-    transaction: Transaction
+    transaction: WalletTransaction
 }
 
 const useStyles = makeStyles(() => ({

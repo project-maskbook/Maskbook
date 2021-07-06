@@ -2,8 +2,8 @@ import { makeStyles, Typography } from '@material-ui/core'
 import type { FC } from 'react'
 import { TokenIcon } from '@masknet/shared'
 import classNames from 'classnames'
-import type { Transaction } from '../../../../plugins/Wallet/types'
 import { DebankTransactionDirection, ZerionTransactionDirection } from '../../../../plugins/Wallet/types'
+import type { WalletTransaction } from './index'
 
 const useStyles = makeStyles((theme) => ({
     root: { display: 'flex', alignItems: 'center' },
@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     receive: { color: '#00c087' },
 }))
 
-export const Record: FC<{ pair: Transaction['pairs'][number] }> = ({ pair }) => {
+export const Record: FC<{ pair: WalletTransaction['pairs'][number] }> = ({ pair }) => {
     const styles = useStyles()
     return (
         <Typography
@@ -21,7 +21,7 @@ export const Record: FC<{ pair: Transaction['pairs'][number] }> = ({ pair }) => 
             variant="body2"
             className={classNames(styles.root, { [styles.receive]: pair.direction === 'receive' })}
             title={pair.name}>
-            <TokenIcon address={pair.address} />
+            <TokenIcon address={pair.address} logoURI={pair.logoURL} />
             <span className={styles.direction}>
                 {pair.direction === DebankTransactionDirection.SEND || pair.direction === ZerionTransactionDirection.OUT
                     ? '-'

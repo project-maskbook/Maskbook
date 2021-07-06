@@ -13,10 +13,10 @@ import {
     TableRow,
     Typography,
 } from '@material-ui/core'
-import { useAccount, useChainId } from '@masknet/web3-shared'
+import { isSameAddress, useAccount, useChainId, useERC20TokenList, useTokenConstants } from '@masknet/web3-shared'
 import { useTransactions } from '../../../../plugins/Wallet/hooks/useTransactions'
 import { Row } from './Row'
-import { FilterTransactionType } from '../../../../plugins/Wallet/types'
+import { FilterTransactionType, Transaction, TransactionPair } from '../../../../plugins/Wallet/types'
 
 const useStyles = makeStyles(() => ({
     fixed: { height: 'calc(100% - 52px)' },
@@ -26,11 +26,21 @@ export interface TransactionListProps {
     transactionType: FilterTransactionType
 }
 
+export interface WalletTransactionPair extends TransactionPair {
+    logoURL?: string
+}
+
+export interface WalletTransaction extends Transaction {
+    pairs: WalletTransactionPair[]
+}
+
 export function TransactionList({ transactionType }: TransactionListProps) {
     const styles = useStyles()
     const chainId = useChainId()
     const account = useAccount()
+    const { NATIVE_TOKEN_ADDRESS } = useTokenConstants()
     const [page, setPage] = useState(0)
+    const { value: tokens } = useERC20TokenList()
 
     const {
         value = { transactions: [], hasNextPage: false },
@@ -42,10 +52,22 @@ export function TransactionList({ transactionType }: TransactionListProps) {
     const { transactions = [], hasNextPage } = value
 
     const dataSource = useMemo(() => {
-        return transactions.filter(({ transactionType: type }) =>
-            transactionType === FilterTransactionType.ALL ? true : type === transactionType,
-        )
-    }, [transactions, transactions.length, transactionType])
+        return transactions
+            .filter(({ transactionType: type }) =>
+                transactionType === FilterTransactionType.ALL ? true : type === transactionType,
+            )
+            .map((transaction) => {
+                const pairs = transaction.pairs.map((pair) => {
+                    if (pair.address === 'eth') {
+                        return { ...pair, ...{ address: NATIVE_TOKEN_ADDRESS } }
+                    } else {
+                        const token = tokens?.find((token) => isSameAddress(token.address, pair.address))
+                        return { ...pair, ...{ logoURL: token?.logoURI } }
+                    }
+                })
+                return { ...transaction, ...{ pairs: pairs } }
+            })
+    }, [transactions, transactions.length, transactionType, tokens?.length])
 
     useUpdateEffect(() => {
         setPage(0)
