@@ -2,7 +2,8 @@ import type BigNumber from 'bignumber.js'
 import type { ChainId, FungibleTokenDetailed, NativeTokenDetailed, ERC20TokenDetailed } from '@masknet/web3-shared'
 
 export enum TradeProvider {
-    UNISWAP,
+    UNISWAP_V2,
+    UNISWAP_V3,
     ZRX, // 0x
     // ONE_INCH,
     SUSHISWAP,
