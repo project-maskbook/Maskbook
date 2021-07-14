@@ -136,7 +136,7 @@ export namespace Plugin.Shared {
         web3?: Web3EnableRequirement
     }
     export interface Web3EnableRequirement {
-        /** This flag indicates the plugin entry in the composition entry should be hidden if the current chain is invalid. */
+        /** Plugin can declare what chain it supports. When the current chain is not supported, the composition entry will be hidden. */
         compositionEntryRequiredChains?: ChainId[]
     }
 
