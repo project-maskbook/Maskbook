@@ -28,6 +28,8 @@ import { useStylesExtends } from '../custom-ui-helper'
 import { ClaimAllDialog } from '../../plugins/ITO/SNSAdaptor/ClaimAllDialog'
 import { WalletIcon } from '../shared/WalletIcon'
 import { useI18N } from '../../utils'
+import { base as ITO_Base } from '../../plugins/ITO/base'
+import { base as RedPacket_Base } from '../../plugins/RedPacket/base'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -192,7 +194,7 @@ export function ToolboxHint(props: ToolboxHintProps) {
                 <Image src={ToolIconURLs.encryptedmsg.image} width={19} height={19} />
                 <Typography className={classes.text}>{ToolIconURLs.encryptedmsg.text}</Typography>
             </MenuItem>,
-            chainIdValid ? (
+            RedPacket_Base.enableRequirement.web3?.compositionEntryRequiredChains?.includes(chainId) ? (
                 <MenuItem onClick={openRedPacket} className={classes.menuItem}>
                     <Image src={ToolIconURLs.redpacket.image} width={19} height={19} />
                     <Typography className={classes.text}>{ToolIconURLs.redpacket.text}</Typography>
@@ -202,7 +204,7 @@ export function ToolboxHint(props: ToolboxHintProps) {
                 <Image src={ToolIconURLs.files.image} width={19} height={19} />
                 <Typography className={classes.text}>{ToolIconURLs.files.text}</Typography>
             </MenuItem>,
-            chainIdValid ? (
+            ITO_Base.enableRequirement.web3?.compositionEntryRequiredChains?.includes(chainId) ? (
                 <MenuItem onClick={openITO} className={classes.menuItem}>
                     <Image src={ToolIconURLs.markets.image} width={19} height={19} />
                     <Typography className={classes.text}>{ToolIconURLs.markets.text}</Typography>
@@ -220,7 +222,7 @@ export function ToolboxHint(props: ToolboxHintProps) {
                     <Typography className={classes.text}>{ToolIconURLs.swap.text}</Typography>
                 </MenuItem>
             ) : null,
-            chainIdValid ? (
+            ITO_Base.enableRequirement.web3?.compositionEntryRequiredChains?.includes(chainId) ? (
                 <MenuItem onClick={onClaimAllDialogOpen} className={classes.menuItem}>
                     <Image src={ToolIconURLs.claim.image} width={19} height={19} />
                     <Typography className={classes.text}>{ToolIconURLs.claim.text}</Typography>

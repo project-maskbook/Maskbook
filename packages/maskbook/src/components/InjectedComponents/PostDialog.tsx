@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react'
-import { useChainIdValid } from '@masknet/web3-shared'
+import { useChainId } from '@masknet/web3-shared'
 import {
     makeStyles,
     InputBase,
@@ -457,14 +457,16 @@ export function CharLimitIndicator({ value, max, ...props }: CircularProgressPro
 }
 
 function PluginRenderer() {
-    const chainIdValid = useChainIdValid()
     const pluginField = usePluginI18NField()
+    const chainId = useChainId()
     const result = useActivatedPluginsSNSAdaptor().map((plugin) =>
         Result.wrap(() => {
             const entry = plugin.CompositionDialogEntry
             const unstable = plugin.enableRequirement.target !== 'stable'
-            const requireChainValid = Boolean(plugin.enableRequirement.web3?.compositionEntryRequiresChainIDValid)
-            if (!entry || (!chainIdValid && requireChainValid)) return null
+            const chainIdValid =
+                !Boolean(plugin.enableRequirement.web3?.compositionEntryRequiredChains) ||
+                Boolean(plugin.enableRequirement.web3?.compositionEntryRequiredChains?.includes(chainId))
+            if (!entry || !chainIdValid) return null
 
             return (
                 <ErrorBoundary subject={`Plugin "${pluginField(plugin.ID, plugin.name)}"`} key={plugin.ID}>
