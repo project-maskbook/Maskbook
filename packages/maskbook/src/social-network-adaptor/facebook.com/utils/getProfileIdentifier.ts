@@ -1,6 +1,8 @@
 import { ProfileIdentifier } from '../../../database/type'
 import Services from '../../../extension/service'
 import type { Profile } from '../../../database'
+import { currentSelectedIdentity } from '../../../settings/settings'
+import { activatedSocialNetworkUI, globalUIState } from '../../../social-network'
 
 type link = HTMLAnchorElement | null | undefined
 
@@ -23,6 +25,15 @@ export function getProfileIdentifierAtFacebook(
     allowCollectInfo?: boolean,
 ): Pick<Profile, 'identifier' | 'nickname' | 'avatar'> {
     const unknown = { identifier: ProfileIdentifier.unknown, avatar: undefined, nickname: undefined }
+
+    const getCurrentIdentifier = () => {
+        const current = currentSelectedIdentity[activatedSocialNetworkUI.networkIdentifier]
+        return (
+            globalUIState.profiles.value.find((i) => i.identifier.toText() === current) ||
+            globalUIState.profiles.value[0]
+        )
+    }
+
     try {
         if (!Array.isArray(links)) links = [links]
         const result = links
@@ -32,12 +43,16 @@ export function getProfileIdentifierAtFacebook(
         const { dom, id, nickname } = result[0] || {}
         if (id) {
             const result = new ProfileIdentifier('facebook.com', id)
+            const currentProfile = getCurrentIdentifier()
             let avatar: string | null = null
             try {
                 const image = dom!.closest('.clearfix')!.parentElement!.querySelector('img')!
                 avatar = image.src
                 if (allowCollectInfo && image.getAttribute('aria-label') === nickname && nickname) {
                     Services.Identity.updateProfileInfo(result, { nickname, avatarURL: image.src })
+                    if (currentProfile && currentProfile.linkedPersona) {
+                        Services.Identity.createNewRelation(result, currentProfile.linkedPersona.identifier)
+                    }
                 }
             } catch {}
             try {
@@ -45,6 +60,9 @@ export function getProfileIdentifierAtFacebook(
                 avatar = image.src
                 if (allowCollectInfo && avatar) {
                     Services.Identity.updateProfileInfo(result, { nickname, avatarURL: image.src })
+                    if (currentProfile && currentProfile.linkedPersona) {
+                        Services.Identity.createNewRelation(result, currentProfile.linkedPersona.identifier)
+                    }
                 }
             } catch {}
             try {
