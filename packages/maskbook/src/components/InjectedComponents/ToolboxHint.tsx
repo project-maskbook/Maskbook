@@ -2,12 +2,12 @@ import { makeStyles, MenuItem, Typography } from '@material-ui/core'
 import classNames from 'classnames'
 import {
     useAccount,
-    useChainId,
-    resolveChainColor,
+    useChainColor,
     useChainDetailed,
     useChainIdValid,
     formatEthereumAddress,
 } from '@masknet/web3-shared'
+import { usePluginRequiredChains } from '@masknet/plugin-infra'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
 import { MaskbookSharpIconOfSize, WalletSharp } from '../../resources/MaskbookIcon'
 import { ToolIconURLs } from '../../resources/tool-icon'
@@ -28,8 +28,8 @@ import { useStylesExtends } from '../custom-ui-helper'
 import { ClaimAllDialog } from '../../plugins/ITO/SNSAdaptor/ClaimAllDialog'
 import { WalletIcon } from '../shared/WalletIcon'
 import { useI18N } from '../../utils'
-import { base as ITO_Base } from '../../plugins/ITO/base'
-import { base as RedPacket_Base } from '../../plugins/RedPacket/base'
+import { base as ITO_Plugin } from '../../plugins/ITO/base'
+import { base as RedPacket_Plugin } from '../../plugins/RedPacket/base'
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -122,9 +122,10 @@ export function ToolboxHint(props: ToolboxHintProps) {
     const { t } = useI18N()
     const classes = useStylesExtends(useStyles(), props)
     const account = useAccount()
-    const chainId = useChainId()
+    const chainColor = useChainColor()
     const chainIdValid = useChainIdValid()
     const chainDetailed = useChainDetailed()
+    const requiredChainsMapping = usePluginRequiredChains()
 
     //#region Encrypted message
     const openEncryptedMessage = useCallback(
@@ -194,7 +195,7 @@ export function ToolboxHint(props: ToolboxHintProps) {
                 <Image src={ToolIconURLs.encryptedmsg.image} width={19} height={19} />
                 <Typography className={classes.text}>{ToolIconURLs.encryptedmsg.text}</Typography>
             </MenuItem>,
-            RedPacket_Base.enableRequirement.web3?.compositionEntryRequiredChains?.includes(chainId) ? (
+            requiredChainsMapping[RedPacket_Plugin.ID] ? (
                 <MenuItem onClick={openRedPacket} className={classes.menuItem}>
                     <Image src={ToolIconURLs.redpacket.image} width={19} height={19} />
                     <Typography className={classes.text}>{ToolIconURLs.redpacket.text}</Typography>
@@ -204,7 +205,7 @@ export function ToolboxHint(props: ToolboxHintProps) {
                 <Image src={ToolIconURLs.files.image} width={19} height={19} />
                 <Typography className={classes.text}>{ToolIconURLs.files.text}</Typography>
             </MenuItem>,
-            ITO_Base.enableRequirement.web3?.compositionEntryRequiredChains?.includes(chainId) ? (
+            requiredChainsMapping[ITO_Plugin.ID] ? (
                 <MenuItem onClick={openITO} className={classes.menuItem}>
                     <Image src={ToolIconURLs.markets.image} width={19} height={19} />
                     <Typography className={classes.text}>{ToolIconURLs.markets.text}</Typography>
@@ -222,7 +223,7 @@ export function ToolboxHint(props: ToolboxHintProps) {
                     <Typography className={classes.text}>{ToolIconURLs.swap.text}</Typography>
                 </MenuItem>
             ) : null,
-            ITO_Base.enableRequirement.web3?.compositionEntryRequiredChains?.includes(chainId) ? (
+            requiredChainsMapping[ITO_Plugin.ID] ? (
                 <MenuItem onClick={onClaimAllDialogOpen} className={classes.menuItem}>
                     <Image src={ToolIconURLs.claim.image} width={19} height={19} />
                     <Typography className={classes.text}>{ToolIconURLs.claim.text}</Typography>
@@ -268,7 +269,7 @@ export function ToolboxHint(props: ToolboxHintProps) {
                             <FiberManualRecordIcon
                                 className={classes.chainIcon}
                                 style={{
-                                    color: resolveChainColor(chainId),
+                                    color: chainColor,
                                 }}
                             />
                         ) : null}
