@@ -26,6 +26,22 @@ export interface ReactRootShadowed {
     // do not name it as unmount otherwise it might be compatible with ReactDOM's Root interface.
     destory(): void
 }
+let observing = false
+const pendingMountPair = new Map<ShadowRoot, Function>()
+const mutationObserver = new MutationObserver(() => {
+    for (const [node, mount] of pendingMountPair) {
+        if (node.host.parentNode) {
+            pendingMountPair.delete(node)
+            try {
+                mount()
+            } catch {}
+        }
+    }
+    if (pendingMountPair.size === 0) {
+        observing = false
+        mutationObserver.disconnect()
+    }
+})
 /**
  * @returns
  * A function that render the JSX in the ShadowRoot with JSS (in material-ui/core) and emotion support.
@@ -39,13 +55,19 @@ export function createReactRootShadowedPartial(_config: CreateRenderInShadowRoot
     ): ReactRootShadowed {
         let jsx: React.ReactChild = ''
         let root: ReactRootShadowed | null = null
-        function tryRender(): void {
-            if (config.signal?.aborted) return
-            if (shadowRoot.host?.parentNode === null) return void setTimeout(tryRender, 20)
 
-            root = mount(jsx, shadowRoot, config, _config)
+        const f = () => (root = mount(jsx, shadowRoot, config, _config))
+
+        if (shadowRoot.host.parentNode) {
+            f()
+        } else {
+            pendingMountPair.set(shadowRoot, f)
+            if (!observing) {
+                observing = true
+                mutationObserver.observe(document, { childList: true, subtree: true })
+            }
         }
-        tryRender()
+
         return {
             render: (_jsx) => {
                 if (!root) jsx = _jsx
