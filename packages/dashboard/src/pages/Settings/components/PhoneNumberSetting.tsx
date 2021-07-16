@@ -1,19 +1,19 @@
 import SettingButton from './SettingButton'
 import { UserContext } from '../hooks/UserContext'
 import { useContext, useState } from 'react'
-import SettingEmailDialog from './dialogs/SettingEmailDialog'
+import SettingPhoneNumberDialog from './dialogs/SettingPhoneNumberDialog'
 import { useDashboardI18N } from '../../../locales'
 
-export default function EmailSetting() {
+export default function PhoneNumberSetting() {
     const t = useDashboardI18N()
     const { user } = useContext(UserContext)
     const [open, setOpen] = useState(false)
     return (
         <>
             <SettingButton onClick={() => setOpen(true)}>
-                {user.email ? t.settings_button_change() : t.settings_button_setting()}
+                {user.phone ? t.settings_button_change() : t.settings_button_setting()}
             </SettingButton>
-            {open ? <SettingEmailDialog open={open} onClose={() => setOpen(false)} /> : null}
+            {open ? <SettingPhoneNumberDialog open={open} onClose={() => setOpen(false)} /> : null}
         </>
     )
 }
