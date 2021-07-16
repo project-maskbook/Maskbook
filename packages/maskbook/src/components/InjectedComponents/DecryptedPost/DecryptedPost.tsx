@@ -1,10 +1,8 @@
-import { Fragment, useEffect, useMemo, useReducer, useState } from 'react'
-import { makeTypedMessageTuple, TypedMessageTuple } from '@masknet/shared'
+import { Fragment, useEffect, useReducer, useState } from 'react'
 import { unreachable } from '@dimensiondev/kit'
+import { makeTypedMessageTuple, TypedMessageTuple } from '@masknet/shared'
 
-import { delay } from '../../../utils/utils'
 import { ServicesWithProgress } from '../../../extension/service'
-import type { Profile } from '../../../database'
 import type { ProfileIdentifier } from '../../../database/type'
 import type {
     DecryptionProgress,
@@ -51,10 +49,7 @@ function progressReducer(
 
 export interface DecryptPostProps {
     onDecrypted: (post: TypedMessageTuple) => void
-    whoAmI: ProfileIdentifier
-    profiles: Profile[]
-    alreadySelectedPreviously: Profile[]
-    requestAppendRecipients?(to: Profile[]): Promise<void>
+    currentIdentity: ProfileIdentifier
     successComponent?: React.ComponentType<DecryptPostSuccessProps>
     successComponentProps?: Partial<DecryptPostSuccessProps>
     waitingComponent?: React.ComponentType<DecryptPostAwaitingProps>
@@ -63,7 +58,7 @@ export interface DecryptPostProps {
     failedComponentProps?: Partial<DecryptPostFailedProps>
 }
 export function DecryptPost(props: DecryptPostProps) {
-    const { whoAmI, profiles, alreadySelectedPreviously, onDecrypted } = props
+    const { currentIdentity, onDecrypted } = props
     const deconstructedPayload = usePostInfoDetails.postPayload()
     const authorInPayload = usePostClaimedAuthor()
     const current = usePostInfo()!
@@ -74,15 +69,6 @@ export function DecryptPost(props: DecryptPostProps) {
     const Success = props.successComponent || DecryptPostSuccess
     const Awaiting = props.waitingComponent || DecryptPostAwaiting
     const Failed = props.failedComponent || DecryptPostFailed
-
-    const requestAppendRecipientsWrapped = useMemo(() => {
-        if (!postBy.equals(whoAmI)) return undefined
-        if (!props.requestAppendRecipients) return undefined
-        return async (people: Profile[]) => {
-            await props.requestAppendRecipients!(people)
-            await delay(1500)
-        }
-    }, [props.requestAppendRecipients, postBy, whoAmI])
 
     //#region Debug info
     const [debugHash, setDebugHash] = useState<string>('Unknown')
@@ -143,11 +129,11 @@ export function DecryptPost(props: DecryptPostProps) {
         if (deconstructedPayload.ok)
             makeProgress(
                 'post text',
-                ServicesWithProgress.decryptFromText(deconstructedPayload.val, postBy, whoAmI, sharedPublic),
+                ServicesWithProgress.decryptFromText(deconstructedPayload.val, postBy, currentIdentity, sharedPublic),
             )
         postMetadataImages.forEach((url) => {
             if (signal.signal.aborted) return
-            makeProgress(url, ServicesWithProgress.decryptFromImageUrl(url, postBy, whoAmI))
+            makeProgress(url, ServicesWithProgress.decryptFromImageUrl(url, postBy, currentIdentity))
         })
         return () => signal.abort()
     }, [
@@ -157,7 +143,7 @@ export function DecryptPost(props: DecryptPostProps) {
         postBy.toText(),
         postMetadataImages.join(),
         sharedPublic,
-        whoAmI.toText(),
+        currentIdentity.toText(),
     ])
 
     // pass 2:
@@ -198,9 +184,6 @@ export function DecryptPost(props: DecryptPostProps) {
                     return (
                         <Success
                             data={progress}
-                            alreadySelectedPreviously={alreadySelectedPreviously}
-                            requestAppendRecipients={requestAppendRecipientsWrapped}
-                            profiles={profiles}
                             sharedPublic={sharedPublic}
                             author={authorInPayload}
                             postedBy={currentPostBy}
@@ -236,7 +219,7 @@ export function DecryptPost(props: DecryptPostProps) {
                 {rendered}
                 <DecryptedPostDebug
                     debugHash={debugHash}
-                    whoAmI={whoAmI}
+                    currentIdentity={currentIdentity}
                     decryptedResult={progress.type === 'progress' ? null : progress}
                 />
             </>
