@@ -17,7 +17,7 @@ export function useActivatedPluginsSNSAdaptor() {
     return useSubscription(subscription)
 }
 
-export function usePluginRequiredChains() {
+export function useActivatedPluginSNSAdaptorWithCompositionEntryRequirementMet() {
     const chainId = useChainId()
     const plugins = useActivatedPluginsSNSAdaptor()
     return plugins.reduce((acc: { [key: string]: boolean }, cur) => {

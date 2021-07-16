@@ -13,7 +13,12 @@ import {
     DialogContent,
     DialogActions,
 } from '@material-ui/core'
-import { I18NStringField, Plugin, useActivatedPluginsSNSAdaptor, usePluginRequiredChains } from '@masknet/plugin-infra'
+import {
+    I18NStringField,
+    Plugin,
+    useActivatedPluginsSNSAdaptor,
+    useActivatedPluginSNSAdaptorWithCompositionEntryRequirementMet,
+} from '@masknet/plugin-infra'
 import { useValueRef } from '@masknet/shared'
 import { CompositionEvent, MaskMessage, useI18N, Flags } from '../../utils'
 import { isMinds } from '../../social-network-adaptor/minds.com/base'
@@ -457,7 +462,7 @@ export function CharLimitIndicator({ value, max, ...props }: CircularProgressPro
 
 function PluginRenderer() {
     const pluginField = usePluginI18NField()
-    const requiredChainsMapping = usePluginRequiredChains()
+    const requiredChainsMapping = useActivatedPluginSNSAdaptorWithCompositionEntryRequirementMet()
     const result = useActivatedPluginsSNSAdaptor().map((plugin) =>
         Result.wrap(() => {
             const entry = plugin.CompositionDialogEntry
