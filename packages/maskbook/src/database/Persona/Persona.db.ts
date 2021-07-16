@@ -1,19 +1,20 @@
 /// <reference path="../global.d.ts" />
 import Fuse from 'fuse.js'
-import { ProfileIdentifier, PersonaIdentifier, Identifier, ECKeyIdentifier } from '../type'
+import { ECKeyIdentifier, Identifier, PersonaIdentifier, ProfileIdentifier } from '../type'
 import { DBSchema, openDB } from 'idb/with-async-ittr-cjs'
 import { IdentifierMap } from '../IdentifierMap'
 import { PrototypeLess, restorePrototype } from '../../utils/type'
 import { MaskMessage } from '../../utils/messages'
-import { IDBPSafeTransaction, createTransaction, createDBAccessWithAsyncUpgrade } from '../helpers/openDB'
+import { createDBAccessWithAsyncUpgrade, createTransaction, IDBPSafeTransaction } from '../helpers/openDB'
 import { queryProfile } from './helpers'
 import { assertPersonaDBConsistency } from './consistency'
 import type {
     AESJsonWebKey,
-    EC_Public_JsonWebKey,
     EC_Private_JsonWebKey,
+    EC_Public_JsonWebKey,
 } from '../../modules/CryptoAlgorithm/interfaces/utils'
 import { CryptoKeyToJsonWebKey } from '../../utils/type-transform/CryptoKey-JsonWebKey'
+
 /**
  * Database structure:
  *
@@ -28,6 +29,12 @@ import { CryptoKeyToJsonWebKey } from '../../utils/type-transform/CryptoKey-Json
  * A persona links to 0 or more profiles.
  * Each profile links to 0 or 1 persona.
  * @keys inline, {@link ProfileRecord.identifier}
+ *
+ * # ObjectStore `relations`:
+ * @description Store relations.
+ * @type {RelationRecord}
+ * Save the relationship between persona and profile.
+ * @keys inline {@link RelationRecord.linked  @link RelationRecord.profile}
  */
 
 const db = createDBAccessWithAsyncUpgrade<PersonaDB, Knowledge>(
@@ -39,8 +46,10 @@ const db = createDBAccessWithAsyncUpgrade<PersonaDB, Knowledge>(
                 function v0_v1() {
                     db.createObjectStore('personas', { keyPath: 'identifier' })
                     db.createObjectStore('profiles', { keyPath: 'identifier' })
+                    db.createObjectStore('relations', { keyPath: ['linked', 'profile'] })
                     transaction.objectStore('profiles').createIndex('network', 'network', { unique: false })
                     transaction.objectStore('personas').createIndex('hasPrivateKey', 'hasPrivateKey', { unique: false })
+                    transaction.objectStore('relations').createIndex('linked', 'linked', { unique: false })
                 }
                 async function v1_v2() {
                     const persona = transaction.objectStore('personas')
@@ -89,7 +98,7 @@ type Knowledge = V1To2
 export const createPersonaDBAccess = db
 export type FullPersonaDBTransaction<Mode extends 'readonly' | 'readwrite'> = IDBPSafeTransaction<
     PersonaDB,
-    ['personas', 'profiles'],
+    ['personas', 'profiles', 'relations'],
     Mode
 >
 export type ProfileTransaction<Mode extends 'readonly' | 'readwrite'> = IDBPSafeTransaction<
@@ -102,13 +111,20 @@ export type PersonasTransaction<Mode extends 'readonly' | 'readwrite'> = IDBPSaf
     ['personas'],
     Mode
 >
+
+export type RelationTransaction<Mode extends 'readonly' | 'readwrite'> = IDBPSafeTransaction<
+    PersonaDB,
+    ['relations'],
+    Mode
+>
+
 export async function consistentPersonaDBWriteAccess(
     action: (t: FullPersonaDBTransaction<'readwrite'>) => Promise<void>,
     tryToAutoFix = true,
 ) {
     // TODO: collect all changes on this transaction then only perform consistency check on those records.
     const database = await db()
-    let t = createTransaction(database, 'readwrite')('profiles', 'personas')
+    let t = createTransaction(database, 'readwrite')('profiles', 'personas', 'relations')
     let finished = false
     const finish = () => (finished = true)
     t.addEventListener('abort', finish)
@@ -118,6 +134,7 @@ export async function consistentPersonaDBWriteAccess(
     // Pause those events when patching write access
     const resumeProfile = MaskMessage.events.profilesChanged.pause()
     const resumePersona = MaskMessage.events.personaChanged.pause()
+    const resumeRelation = MaskMessage.events.relationsChanged.pause()
     const resumeLinkedProfileChanged = MaskMessage.events.linkedProfilesChanged.pause()
     try {
         await action(t)
@@ -126,16 +143,18 @@ export async function consistentPersonaDBWriteAccess(
             console.warn('The transaction ends too early! There MUST be a bug in the program!')
             console.trace()
             // start a new transaction to check consistency
-            t = createTransaction(database, 'readwrite')('profiles', 'personas')
+            t = createTransaction(database, 'readwrite')('profiles', 'personas', 'relations')
         }
         try {
             await assertPersonaDBConsistency(tryToAutoFix ? 'fix' : 'throw', 'full check', t)
             resumeProfile((data) => [data.flat()])
             resumePersona((data) => [data.flat()])
+            resumeRelation((data) => [data.flat()])
             resumeLinkedProfileChanged((data) => [data.flat()])
         } finally {
             // If the consistency check throws, we drop all pending events
             resumeProfile(() => [])
+            resumePersona(() => [])
             resumePersona(() => [])
             resumeLinkedProfileChanged(() => [])
         }
@@ -153,7 +172,7 @@ export async function queryPersonaByProfileDB(
     query: ProfileIdentifier,
     t?: FullPersonaDBTransaction<'readonly'>,
 ): Promise<PersonaRecord | null> {
-    t = t || createTransaction(await db(), 'readonly')('personas', 'profiles')
+    t = t || createTransaction(await db(), 'readonly')('personas', 'profiles', 'relations')
     const x = await t.objectStore('profiles').get(query.toText())
     if (!x?.linkedPersona) return null
     return queryPersonaDB(restorePrototype(x.linkedPersona, ECKeyIdentifier.prototype), t)
@@ -195,7 +214,7 @@ export type PersonaRecordWithPrivateKey = PersonaRecord & Required<Pick<PersonaR
 export async function queryPersonasWithPrivateKey(
     t?: FullPersonaDBTransaction<'readonly'>,
 ): Promise<PersonaRecordWithPrivateKey[]> {
-    t = t || createTransaction(await db(), 'readonly')('personas', 'profiles')
+    t = t || createTransaction(await db(), 'readonly')('personas', 'profiles', 'relations')
     const records: PersonaRecord[] = []
     records.push(
         ...(await t.objectStore('personas').index('hasPrivateKey').getAll(IDBKeyRange.only('yes'))).map(
@@ -290,7 +309,7 @@ export async function safeDeletePersonaDB(
     id: PersonaIdentifier,
     t?: FullPersonaDBTransaction<'readwrite'>,
 ): Promise<boolean> {
-    t = t || createTransaction(await db(), 'readwrite')('personas', 'profiles')
+    t = t || createTransaction(await db(), 'readwrite')('personas', 'profiles', 'relations')
     const r = await queryPersonaDB(id, t)
     if (!r) return true
     if (r.linkedProfiles.size !== 0) return false
@@ -426,7 +445,7 @@ export async function detachProfileDB(
     identifier: ProfileIdentifier,
     t?: FullPersonaDBTransaction<'readwrite'>,
 ): Promise<void> {
-    t = t || createTransaction(await db(), 'readwrite')('personas', 'profiles')
+    t = t || createTransaction(await db(), 'readwrite')('personas', 'profiles', 'relations')
     const profile = await queryProfileDB(identifier, t)
     if (!profile?.linkedPersona) return
 
@@ -450,7 +469,7 @@ export async function attachProfileDB(
     data: LinkedProfileDetails,
     t?: FullPersonaDBTransaction<'readwrite'>,
 ): Promise<void> {
-    t = t || createTransaction(await db(), 'readwrite')('personas', 'profiles')
+    t = t || createTransaction(await db(), 'readwrite')('personas', 'profiles', 'relations')
     const profile =
         (await queryProfileDB(identifier, t)) ||
         (await createProfileDB({ identifier, createdAt: new Date(), updatedAt: new Date() }, t)) ||
@@ -475,6 +494,48 @@ export async function attachProfileDB(
 export async function deleteProfileDB(id: ProfileIdentifier, t: ProfileTransaction<'readwrite'>): Promise<void> {
     await t.objectStore('profiles').delete(id.toText())
     MaskMessage.events.profilesChanged.sendToAll([{ reason: 'delete', of: id }])
+}
+
+/**
+ * Create a new Relation
+ */
+export async function createRelationDB(record: RelationRecord, t: RelationTransaction<'readwrite'>): Promise<void> {
+    await t.objectStore('relations').add(relationRecordToDB(record))
+    MaskMessage.events.relationsChanged.sendToAll([{ of: record.profile, reason: 'update' }])
+}
+
+/**
+ * Query many relations
+ */
+export async function queryRelationsDB(
+    linked: PersonaIdentifier,
+    t?: RelationTransaction<'readonly'>,
+): Promise<RelationRecord[]> {
+    t = t || createTransaction(await db(), 'readonly')('relations')
+    return (await t.objectStore('relations').index('linked').getAll(IDBKeyRange.only(linked.toText()))).map(
+        relationRecordOutDB,
+    )
+}
+
+/**
+ * Update a relation
+ * @param updating
+ * @param t
+ */
+export async function updateRelationDB(updating: RelationRecord, t: RelationTransaction<'readwrite'>): Promise<void> {
+    const old = await t
+        .objectStore('relations')
+        .get(IDBKeyRange.only([updating.linked.toText(), updating.profile.toText()]))
+
+    if (!old) throw new Error('Updating a non exists record')
+
+    const nextRecord: RelationRecordDB = relationRecordToDB({
+        ...relationRecordOutDB(old),
+        ...updating,
+    })
+
+    await t.objectStore('relations').put(nextRecord)
+    MaskMessage.events.relationsChanged.sendToAll([{ of: updating.profile, favor: updating.favor, reason: 'update' }])
 }
 
 //#endregion
@@ -515,11 +576,19 @@ export interface PersonaRecord {
      */
     uninitialized?: boolean
 }
-type ProfileRecordDB = Omit<ProfileRecord, 'identifier' | 'hasPrivateKey' | 'linkedPersona'> & {
+
+export interface RelationRecord {
+    profile: ProfileIdentifier
+    linked: PersonaIdentifier
+    favor?: boolean
+}
+
+type ProfileRecordDB = Omit<ProfileRecord, 'identifier' | 'hasPrivateKey'> & {
     identifier: string
     network: string
     linkedPersona?: PrototypeLess<PersonaIdentifier>
 }
+
 type PersonaRecordDB = Omit<PersonaRecord, 'identifier' | 'linkedProfiles'> & {
     identifier: string
     linkedProfiles: Map<string, LinkedProfileDetails>
@@ -527,6 +596,11 @@ type PersonaRecordDB = Omit<PersonaRecord, 'identifier' | 'linkedProfiles'> & {
      * This field is used as index of the db.
      */
     hasPrivateKey: 'no' | 'yes'
+}
+type RelationRecordDB = Omit<RelationRecord, 'profile' | 'linked'> & {
+    network: string
+    profile: string
+    linked: string
 }
 
 export interface PersonaDB extends DBSchema {
@@ -545,6 +619,14 @@ export interface PersonaDB extends DBSchema {
         indexes: {
             // Use `network` field as index
             network: string
+        }
+    }
+    /** Use inline keys **/
+    relations: {
+        key: IDBArrayKey
+        value: RelationRecordDB
+        indexes: {
+            linked: string
         }
     }
 }
@@ -586,4 +668,26 @@ function personaRecordOutDB(x: PersonaRecordDB): PersonaRecord {
     }
     return obj
 }
+
+function relationRecordToDB(x: RelationRecord): RelationRecordDB {
+    return {
+        ...x,
+        network: x.profile.network,
+        profile: x.profile.toText(),
+        linked: x.linked.toText(),
+    }
+}
+
+function relationRecordOutDB(x: RelationRecordDB): RelationRecord {
+    return {
+        ...x,
+        profile: Identifier.fromString(x.profile, ProfileIdentifier).unwrap(),
+        linked: Identifier.fromString(x.linked, ECKeyIdentifier).unwrap(),
+    }
+}
+
+function findRelationRecordWithLinked(x: RelationRecordDB, linked: PersonaIdentifier) {
+    return linked.equals(Identifier.fromString(x.linked, ECKeyIdentifier).unwrap())
+}
+
 //#endregion
