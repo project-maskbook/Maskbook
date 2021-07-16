@@ -17,7 +17,7 @@ import {
     I18NStringField,
     Plugin,
     useActivatedPluginsSNSAdaptor,
-    useActivatedPluginSNSAdaptorWithCompositionEntryRequirementMet,
+    useActivatedPluginSNSAdaptorWithUsableChainRequirementMet,
 } from '@masknet/plugin-infra'
 import { useValueRef } from '@masknet/shared'
 import { CompositionEvent, MaskMessage, useI18N, Flags } from '../../utils'
@@ -462,7 +462,7 @@ export function CharLimitIndicator({ value, max, ...props }: CircularProgressPro
 
 function PluginRenderer() {
     const pluginField = usePluginI18NField()
-    const requiredChainsMapping = useActivatedPluginSNSAdaptorWithCompositionEntryRequirementMet()
+    const requiredChainsMapping = useActivatedPluginSNSAdaptorWithUsableChainRequirementMet()
     const result = useActivatedPluginsSNSAdaptor().map((plugin) =>
         Result.wrap(() => {
             const entry = plugin.CompositionDialogEntry

@@ -15,7 +15,7 @@ export const base: Plugin.Shared.Definition = {
         networks: { type: 'opt-out', networks: {} },
         target: 'stable',
         web3: {
-            compositionEntryRequiredChains: [ChainId.Mainnet, ChainId.BSC, ChainId.Matic],
+            usableRequiredChains: [ChainId.Mainnet, ChainId.BSC, ChainId.Matic],
         },
     },
 }

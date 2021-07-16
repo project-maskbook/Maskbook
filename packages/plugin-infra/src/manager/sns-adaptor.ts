@@ -17,13 +17,12 @@ export function useActivatedPluginsSNSAdaptor() {
     return useSubscription(subscription)
 }
 
-export function useActivatedPluginSNSAdaptorWithCompositionEntryRequirementMet() {
+export function useActivatedPluginSNSAdaptorWithUsableChainRequirementMet() {
     const chainId = useChainId()
     const plugins = useActivatedPluginsSNSAdaptor()
     return plugins.reduce((acc: { [key: string]: boolean }, cur) => {
-        const compositionEntryRequiredChains = cur.enableRequirement.web3?.compositionEntryRequiredChains
-        acc[cur.ID] =
-            !Boolean(compositionEntryRequiredChains) || Boolean(compositionEntryRequiredChains?.includes(chainId))
+        const usableRequiredChains = cur.enableRequirement.web3?.usableRequiredChains
+        acc[cur.ID] = !Boolean(usableRequiredChains) || Boolean(usableRequiredChains?.includes(chainId))
         return acc
     }, {})
 }

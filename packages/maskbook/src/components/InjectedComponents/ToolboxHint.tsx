@@ -7,7 +7,7 @@ import {
     useChainIdValid,
     formatEthereumAddress,
 } from '@masknet/web3-shared'
-import { useActivatedPluginSNSAdaptorWithCompositionEntryRequirementMet } from '@masknet/plugin-infra'
+import { useActivatedPluginSNSAdaptorWithUsableChainRequirementMet } from '@masknet/plugin-infra'
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord'
 import { MaskbookSharpIconOfSize, WalletSharp } from '../../resources/MaskbookIcon'
 import { ToolIconURLs } from '../../resources/tool-icon'
@@ -125,7 +125,7 @@ export function ToolboxHint(props: ToolboxHintProps) {
     const chainColor = useChainColor()
     const chainIdValid = useChainIdValid()
     const chainDetailed = useChainDetailed()
-    const requiredChainsMapping = useActivatedPluginSNSAdaptorWithCompositionEntryRequirementMet()
+    const requiredChainsMapping = useActivatedPluginSNSAdaptorWithUsableChainRequirementMet()
 
     //#region Encrypted message
     const openEncryptedMessage = useCallback(

@@ -137,7 +137,7 @@ export namespace Plugin.Shared {
     }
     export interface Web3EnableRequirement {
         /** Plugin can declare what chain it supports. When the current chain is not supported, the composition entry will be hidden. */
-        compositionEntryRequiredChains?: ChainId[]
+        usableRequiredChains?: ChainId[]
     }
 
     export interface ManagementProperty {
